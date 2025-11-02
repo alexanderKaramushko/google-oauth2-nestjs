@@ -30,10 +30,10 @@
 
 ## Стек технологий:
 
-– @nestjs/jwt
-– @nestjs/passport, проверка кредов, выпуск токенов, обогащение запросов
-– passport-google-oauth2
-– passport-local
+– @nestjs/jwt <br />
+– @nestjs/passport, проверка кредов, выпуск токенов, обогащение запросов <br />
+– passport-google-oauth2, стратегия аутентификации по OAuth 2.0 <br />
+– passport-local <br />
 
 ## TODO
 
