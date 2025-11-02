@@ -20,13 +20,7 @@
 5. Создается роут /oauth2/redirect/google, на которой происходит редирект после авторизации в Google <br />
 6. На роуты из пунктов 3 и 5 навешиваются гарды, которые делают редиректы и verify-проверку <br />
 
-+-----+ <-- POST /oauth2/redirect/google ----- +---------+
-|     |                                        |         |
-|     |   ----- Token Request  -----> +-----+  |         |
-| App |   <---- Token Response ------ | AS  |  | Browser |
-|     |                               +-----+  |         |
-|     |   ...additional processing...          |         |
-+-----+                                        +---------+
+<img width="466" height="305" alt="Снимок экрана 2025-11-02 в 23 45 07" src="https://github.com/user-attachments/assets/fcb12bd0-45d1-40d3-a8de-4a46ebfa4c9b" />
 
 ## Архитектура
 
