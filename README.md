@@ -1,4 +1,4 @@
-# SSO-сервис на основе AS-сервиса Google OAuth 2.0
+# SSO-сервис на основе AS-сервиса Google OAuth 2.0 + Google Identity
 
 ## Алгоритм авторизации
 
