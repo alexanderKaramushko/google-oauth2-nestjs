@@ -35,6 +35,10 @@
 – passport-google-oauth2
 – passport-local
 
+## TODO
+
+– Создать диаграмму последовательности
+
 ## Ресурсы
 
 [Google OAuth 2.0](https://developers.google.com/identity/protocols/oauth2?hl=ru)
