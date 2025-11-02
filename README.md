@@ -12,7 +12,7 @@
 
 ## Как работает
 
-1. Регистрируется приложение в console.cloud <br />
+1. Регистрируется приложение в Google console.cloud <br />
 2. Создается стратегия passport-google-oauth2, согласно протоколу OAuth 2.0 <br />
    реализуется метод verify, который проверяет/создает пользователя и возвращает JWT <br />
 3. Пробрасывается Client ID и Client secret приложения в стратегии passport-google-oauth2 <br />
