@@ -14,13 +14,13 @@
 5. Создается роут /oauth2/redirect/google, на которой происходит редирект после авторизации в Google <br />
 6. На роуты из пунктов 3 и 5 навешиваются гарды, которые делают редиректы и verify-проверку <br />
 
+<img width="428" height="244" alt="Снимок экрана 2025-11-02 в 23 50 56" src="https://github.com/user-attachments/assets/dd4e76cc-3fcf-4f2e-b788-58e827e67d02" />
+
 ## Как работает, валидация JWT
 
 1. Создается стратегия passport-jwt
 2. На защищенные роуты навешиваются гарды стратегии passport-jwt
 3. Создается глобальный декоратор public-роутов
-
-<img width="428" height="244" alt="Снимок экрана 2025-11-02 в 23 50 56" src="https://github.com/user-attachments/assets/dd4e76cc-3fcf-4f2e-b788-58e827e67d02" />
 
 ## Архитектура
 
