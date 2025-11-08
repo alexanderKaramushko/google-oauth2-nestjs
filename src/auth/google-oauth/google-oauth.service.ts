@@ -26,7 +26,6 @@ export class GoogleOauthService {
     response.cookie('jwt', idToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      maxAge: 15 * 60 * 1000,
     });
 
     return response.json(request.user);
