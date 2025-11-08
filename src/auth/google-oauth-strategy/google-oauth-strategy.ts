@@ -7,6 +7,8 @@ import { User } from 'src/users/user.model';
 
 export const GOOGLE_AUTH_STRATEGY_NAME = 'google';
 
+// Костыль: PassportStrategy оборачивает validate в callback,
+// теряя арность метода validate
 const VALIDATE_ARITY = 6;
 
 @Injectable()
