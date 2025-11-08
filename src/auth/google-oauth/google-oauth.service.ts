@@ -1,25 +1,34 @@
-import { Injectable, Response } from '@nestjs/common';
-import { type Response as ExpressResponse } from 'express';
+import { Injectable, Request, Response } from '@nestjs/common';
+import {
+  type Response as ExpressResponse,
+  type Request as ExpressRequest,
+} from 'express';
+import { UsersService } from 'src/users/users.service';
+import { AuthResult } from '../google-oauth-strategy/types';
 
 @Injectable()
 export class GoogleOauthService {
+  constructor(private usersService: UsersService) {}
+
   logout(@Response() response: ExpressResponse) {
     response.clearCookie('jwt');
 
     return response.json('Logged out');
   }
 
-  oauthRedirect(request: any, response: ExpressResponse) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-    const jwtToken = request.user.accessToken;
+  oauthRedirect(
+    @Request() request: ExpressRequest & AuthResult,
+    @Response() response: ExpressResponse,
+  ) {
+    const idToken = request.user.id_token;
 
     // // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    response.cookie('jwt', jwtToken, {
+    response.cookie('jwt', idToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 15 * 60 * 1000,
     });
 
-    return response.json('Авторизован');
+    return response.json(request.user);
   }
 }

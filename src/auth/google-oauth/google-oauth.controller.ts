@@ -1,7 +1,11 @@
 import { Controller, Get, Request, Response, UseGuards } from '@nestjs/common';
 import { GoogleOauthService } from './google-oauth.service';
-import { GoogleOauthGuard } from '../google-oauth.guard/google-oauth.guard';
-import { type Response as ExpressResponse } from 'express';
+import { GoogleOauthGuard } from '../google-oauth-strategy/google-oauth.guard';
+import {
+  type Response as ExpressResponse,
+  type Request as ExpressRequest,
+} from 'express';
+import { AuthResult } from '../google-oauth-strategy/types';
 
 @Controller('google-oauth')
 export class GoogleOauthController {
@@ -19,7 +23,7 @@ export class GoogleOauthController {
   @UseGuards(GoogleOauthGuard)
   @Get('redirect')
   oauthRedirect(
-    @Request() request: ExpressResponse,
+    @Request() request: ExpressRequest & AuthResult,
     @Response() response: ExpressResponse,
   ) {
     return this.googleOauthService.oauthRedirect(request, response);
