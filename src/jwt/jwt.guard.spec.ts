@@ -1,11 +1,12 @@
-import { Test, TestingModule } from '@nestjs/testing';
+import { TestingModule } from '@nestjs/testing';
 import { JwtGuard } from './jwt.guard';
+import { createTestingModule } from 'src/helpers/createTestingModule';
 
 describe('JwtGuard', () => {
   let provider: JwtGuard;
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    const module: TestingModule = await createTestingModule({
       providers: [JwtGuard],
     }).compile();
 

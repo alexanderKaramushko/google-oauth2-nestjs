@@ -7,6 +7,26 @@
       "name": "Дебаг с подключением к процессу Node JS",
       "port": 9229,
       "restart": true,
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Дебаг тестов с подключением к процессу Node JS",
+      "runtimeExecutable": "npx",
+      "args": [
+        "--runInBand",
+      ],
+      "runtimeArgs": [
+        "jest",
+        "--require=tsconfig-paths/register",
+        "--require=ts-node/register"
+      ],
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "restart": true,
     }
   ]
 }
