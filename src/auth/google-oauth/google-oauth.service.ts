@@ -3,12 +3,11 @@ import {
   type Response as ExpressResponse,
   type Request as ExpressRequest,
 } from 'express';
-import { UsersService } from 'src/users/users.service';
 import { AuthResult } from '../google-oauth-strategy/types';
 
 @Injectable()
 export class GoogleOauthService {
-  constructor(private usersService: UsersService) {}
+  constructor() {}
 
   logout(@Response() response: ExpressResponse) {
     response.clearCookie('jwt');
