@@ -4,6 +4,7 @@ import { Strategy, VerifyCallback } from 'passport-google-oauth2';
 import { UsersService } from 'src/users/users.service';
 import { AuthInfo, GoogleProfile } from './types';
 import { User } from 'src/users/user.model';
+import { MicroservicesService } from 'src/microservices/microservices.service';
 
 export const GOOGLE_AUTH_STRATEGY_NAME = 'google';
 
@@ -17,7 +18,10 @@ export class GoogleOauthStrategy extends PassportStrategy(
   GOOGLE_AUTH_STRATEGY_NAME,
   VALIDATE_ARITY,
 ) {
-  constructor(private usersService: UsersService) {
+  constructor(
+    private usersService: UsersService,
+    private microservices: MicroservicesService,
+  ) {
     super({
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
@@ -52,6 +56,17 @@ export class GoogleOauthStrategy extends PassportStrategy(
       subjectId: userDocument.subjectId,
       provider: userDocument.provider,
     };
+
+    try {
+      await this.microservices.createGoalsUser({
+        name: user.name,
+        subjectId: user.subjectId,
+      });
+    } catch (error: any) {
+      console.log(
+        `Ошибка создания пользователя в сервисе целей: ${error.message}`,
+      );
+    }
 
     return done(null, { ...result, ...user });
   }

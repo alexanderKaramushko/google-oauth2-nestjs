@@ -4,9 +4,10 @@ import { GoogleOauthController } from './google-oauth/google-oauth.controller';
 import { GoogleOauthService } from './google-oauth/google-oauth.service';
 import { GoogleOauthGuard } from './google-oauth-strategy/google-oauth.guard';
 import { UsersModule } from 'src/users/users.module';
+import { MicroservicesModule } from 'src/microservices/microservices.module';
 
 @Module({
-  imports: [UsersModule],
+  imports: [UsersModule, MicroservicesModule],
   providers: [GoogleOauthStrategy, GoogleOauthService, GoogleOauthGuard],
   controllers: [GoogleOauthController],
 })
