@@ -1,7 +1,7 @@
 import { TestingModule } from '@nestjs/testing';
 import { GoogleOauthStrategy } from './google-oauth-strategy';
 import { createTestingModule } from 'src/helpers/createTestingModule';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/modules/users/users.service';
 
 describe('GoogleOauthStrategy', () => {
   let provider: GoogleOauthStrategy;

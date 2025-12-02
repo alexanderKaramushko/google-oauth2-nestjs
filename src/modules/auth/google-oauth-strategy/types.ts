@@ -1,4 +1,4 @@
-import { User } from 'src/users/user.model';
+import { User } from 'src/modules/users/user.model';
 
 type Photo = {
   value: string;

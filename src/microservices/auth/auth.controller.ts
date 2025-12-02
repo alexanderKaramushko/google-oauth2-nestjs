@@ -1,8 +1,8 @@
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload, Transport } from '@nestjs/microservices';
 import { jwtDecode } from 'jwt-decode';
-import { JWT } from 'src/jwt/types';
-import { UsersService } from 'src/users/users.service';
+import { JWT } from 'src/guards/jwt/types';
+import { UsersService } from 'src/modules/users/users.service';
 
 @Controller()
 export class AuthController {

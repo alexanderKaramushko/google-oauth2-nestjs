@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback } from 'passport-google-oauth2';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/modules/users/users.service';
 import { AuthInfo, GoogleProfile } from './types';
-import { User } from 'src/users/user.model';
+import { User } from 'src/modules/users/user.model';
 
 export const GOOGLE_AUTH_STRATEGY_NAME = 'google';
 
