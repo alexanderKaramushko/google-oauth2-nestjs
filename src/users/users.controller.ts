@@ -11,10 +11,10 @@ export class UsersController {
 
   @UseGuards(JwtGuard)
   @Get('profile')
-  async getUserById(@Request() request: ExpressRequest) {
+  async getUserBySubjectId(@Request() request: ExpressRequest) {
     const token = request.cookies.jwt as string;
     const { sub } = jwtDecode<JWT>(token);
 
-    return this.userService.findByUserId(sub);
+    return this.userService.findBySubjectId(sub);
   }
 }

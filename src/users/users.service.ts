@@ -17,7 +17,7 @@ export class UsersService {
     return this.userModel.find({ subjectId, provider });
   }
 
-  findByUserId(userId: string) {
-    return this.userModel.find({ subjectId: userId });
+  findBySubjectId(subjectId: string) {
+    return this.userModel.find({ subjectId });
   }
 }
