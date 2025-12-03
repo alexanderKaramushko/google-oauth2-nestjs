@@ -5,7 +5,7 @@ import {
   type Response as ExpressResponse,
   type Request as ExpressRequest,
 } from 'express';
-import { AuthResult } from '../google-oauth-strategy/types';
+import { AuthResult } from '../google-oauth.interface';
 
 @Controller('google-oauth')
 export class GoogleOauthController {
