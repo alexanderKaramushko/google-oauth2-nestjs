@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import { OAuth2Client } from 'google-auth-library';
-import { OAUTH_CLIENT } from 'src/modules/shared.module';
+import { OAUTH_CLIENT } from 'src/modules/oauth/oauth.tokens';
 
 @Injectable()
 export class JwtGuard implements CanActivate {

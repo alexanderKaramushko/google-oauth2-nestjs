@@ -1,9 +1,7 @@
-import { Module, Global } from '@nestjs/common';
+import { Module } from '@nestjs/common';
+import { OAUTH_CLIENT } from './oauth.tokens';
 import { OAuth2Client } from 'google-auth-library';
 
-export const OAUTH_CLIENT = 'OAUTH_CLIENT';
-
-@Global()
 @Module({
   providers: [
     {
@@ -13,4 +11,4 @@ export const OAUTH_CLIENT = 'OAUTH_CLIENT';
   ],
   exports: [OAUTH_CLIENT],
 })
-export class SharedModule {}
+export class OAuthModule {}

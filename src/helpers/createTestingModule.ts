@@ -1,7 +1,8 @@
 import { ModuleMetadata } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModuleOptions } from '@nestjs/testing';
-import { OAUTH_CLIENT } from 'src/modules/shared.module';
+import { OAUTH_CLIENT } from 'src/modules/oauth/oauth.tokens';
+
 export function createTestingModule(
   metadata: ModuleMetadata,
   options?: TestingModuleOptions,
