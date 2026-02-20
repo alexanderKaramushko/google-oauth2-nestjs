@@ -14,8 +14,12 @@ export class JwtGuard implements CanActivate {
   constructor(@Inject(OAUTH_CLIENT) private oAuthClient: OAuth2Client) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest<Request>();
-    const token = request.cookies.jwt as string | null;
+    const token =
+      context.getType() === 'rpc'
+        ? context.switchToRpc().getData<string | null>()
+        : (context.switchToHttp().getRequest<Request>().cookies.jwt as
+            | string
+            | null);
 
     if (!token) {
       throw new UnauthorizedException();
@@ -26,6 +30,10 @@ export class JwtGuard implements CanActivate {
       audience: process.env.CLIENT_ID,
     });
 
-    return !!ticket;
+    if (!ticket) {
+      throw new UnauthorizedException();
+    }
+
+    return !!ticket.getPayload();
   }
 }
