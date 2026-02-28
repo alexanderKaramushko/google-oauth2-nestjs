@@ -12,7 +12,7 @@
 3. Пробрасывается Client ID и Client secret приложения в стратегии passport-google-oauth2 <br />
 4. Создается роут /auth/login для редиректа на Google-авторизацию <br />
 5. Создается роут /oauth2/redirect/google, на которой происходит редирект после авторизации в Google <br />
-6. На роуты из пунктов 3 и 5 навешиваются гарды, которые делают редиректы и verify-проверку <br />
+6. На роуты из пунктов 3 и 5 навешиваются гарды, которые делают редиректы и verify-проверку через OAuth-сервисы Google <br />
 
 <img width="428" height="244" alt="Снимок экрана 2025-11-02 в 23 50 56" src="https://github.com/user-attachments/assets/dd4e76cc-3fcf-4f2e-b788-58e827e67d02" />
 
