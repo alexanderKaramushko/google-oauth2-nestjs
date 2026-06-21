@@ -1,5 +1,13 @@
 # SSO-сервис на основе AS-сервиса Google OAuth 2.0 + Google Identity
 
+## dev-разработка
+
+### Туннелирование через tuna
+
+`brew install yuccastream/tap/tuna` <br />
+`tuna config save-token <token>` <br />
+`tuna http 3001`
+
 ## Алгоритм авторизации
 
 Предусловия: пользователь не авторизован
