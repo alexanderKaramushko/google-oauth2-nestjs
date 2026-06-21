@@ -4,7 +4,7 @@
 
 ### Туннелирование через tuna
 
-1. Создать reverse proxy публичный адрес -> приватный адрес:
+1. Создать reverse proxy публичный адрес -> приватный адрес: <br />
 `brew install yuccastream/tap/tuna` <br />
 `tuna config save-token <token>` <br />
 `tuna http 3001` <br />
