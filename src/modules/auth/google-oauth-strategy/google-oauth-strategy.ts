@@ -24,6 +24,7 @@ export class GoogleOauthStrategy extends PassportStrategy(
       callbackURL: process.env.OAUTH_CALLBACK_HOST + '/google-oauth/redirect',
       scope: ['profile', 'openid'],
       passReqToCallback: true,
+      proxy: true,
     });
   }
 

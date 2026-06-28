@@ -16,6 +16,8 @@ async function bootstrap() {
     },
   });
 
+  app.getHttpAdapter().getInstance().set('trust proxy', 1);
+
   await app.startAllMicroservices();
 
   await app.listen(process.env.SERVICE_PORT ?? 3001);
