@@ -1,5 +1,16 @@
 # SSO-сервис на основе AS-сервиса Google OAuth 2.0 + Google Identity
 
+## dev-разработка
+
+### Туннелирование через tuna
+
+1. Создать reverse proxy публичный адрес -> приватный адрес: <br />
+`brew install yuccastream/tap/tuna` <br />
+`tuna config save-token <token>` <br />
+`tuna http 3001` <br />
+2. Добавить публичный адрес в сервис OAuth-авторизации в Google Console.
+3. Указать публичный адрес в OAUTH_CALLBACK_HOST
+
 ## Алгоритм авторизации
 
 Предусловия: пользователь не авторизован
