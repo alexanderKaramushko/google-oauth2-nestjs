@@ -1,5 +1,8 @@
 node_modules
+.pnpm-store
 dist
-*.log
-*.md
+coverage
+docs
 .git
+.env
+.env.*

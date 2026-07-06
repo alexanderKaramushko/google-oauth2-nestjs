@@ -7,6 +7,7 @@ declare namespace NodeJS {
     MONGO_DB_PORT: string;
     MONGO_DB_HOST: string;
     BOOTSTRAP_MICROSERVICE: string;
+    SERVICE_HOST: string;
     SERVICE_PORT: string;
     MICROSERVICE_HOST: string;
     MICROSERVICE_PORT: string;

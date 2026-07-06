@@ -11,7 +11,7 @@ async function bootstrap() {
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.TCP,
     options: {
-      host: process.env.MICROSERVICE_HOST,
+      host: process.env.MICROSERVICE_HOST ?? '0.0.0.0',
       port: Number.parseInt(process.env.MICROSERVICE_PORT ?? '3002', 10),
     },
   });
@@ -20,7 +20,10 @@ async function bootstrap() {
 
   await app.startAllMicroservices();
 
-  await app.listen(process.env.SERVICE_PORT ?? 3001);
+  await app.listen(
+    Number.parseInt(process.env.SERVICE_PORT ?? '3001', 10),
+    process.env.SERVICE_HOST ?? '0.0.0.0',
+  );
 }
 
 // eslint-disable-next-line @typescript-eslint/no-floating-promises

@@ -1,24 +1,23 @@
 services:
-  service:
+  goals-auth:
     build:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      - db
+      - mongo
     ports:
       - 3001:3001
       - 3002:3002
-    environment:
-      - CLIENT_ID
-      - CLIENT_SECRET
-      - OAUTH_CALLBACK_HOST
-      - MONGO_DB_HOST=db
-      - MONGO_DB_NAME
-      - MONGO_DB_PORT
+    env_file:
+      - .env
+    restart: unless-stopped
 
-  db:
+  mongo:
     image: mongo:latest
     environment:
-      MONGODB_DATABASE: test
+      MONGODB_DATABASE: ${MONGO_DB_NAME}
     ports:
       - 27017:27017
+    env_file:
+      - .env
+    restart: unless-stopped
