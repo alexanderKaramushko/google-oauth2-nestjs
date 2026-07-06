@@ -2,6 +2,16 @@
 
 ## dev-разработка
 
+<strong>API</strong> <br />
+
+[Log in](http://localhost:3001/google-oauth/login) <br />
+[Log out (удаление куки)](http://localhost:3001/google-oauth/logout) <br />
+[Full Log out (инвалидация сессии)](https://accounts.google.com/signout/chrome/landing?continue=https%3A%2F%2Faccounts.google.com%2FServiceLogin%3Felo%3D1) <br />
+
+### Локальный запуск сервисов:
+
+`docker compose up -d`
+
 ### Туннелирование через tuna
 
 1. Создать reverse proxy публичный адрес -> приватный адрес: <br />
@@ -46,18 +56,6 @@
 – @nestjs/passport, проверка кредов, выпуск токенов, обогащение запросов <br />
 – passport-google-oauth2, стратегия аутентификации по OAuth 2.0 <br />
 – passport-local <br />
-
-## dev-разработка
-
-<strong>API</strong> <br />
-
-[Log in](http://localhost:3001/google-oauth/login) <br />
-[Log out (удаление куки)](http://localhost:3001/google-oauth/logout) <br />
-[Full Log out (инвалидация сессии)](https://accounts.google.com/signout/chrome/landing?continue=https%3A%2F%2Faccounts.google.com%2FServiceLogin%3Felo%3D1) <br />
-
-## Локальный запуск сервисов:
-
-`docker compose up -d`
 
 ## Отладка
 
