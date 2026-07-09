@@ -74,3 +74,10 @@
 ## Ресурсы
 
 [Google OAuth 2.0](https://developers.google.com/identity/protocols/oauth2?hl=ru)
+
+### TODO и техдолг
+
+Другое:
+* [ ] Настроить healthchecks liveliness для goals-auth *
+* [ ] Настроить деплой релизов
+* [ ] Настроить SHA-релизы c выпуском тэгов *
