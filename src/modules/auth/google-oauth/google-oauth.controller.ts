@@ -5,7 +5,6 @@ import {
   type Response as ExpressResponse,
   type Request as ExpressRequest,
 } from 'express';
-import { AuthResult } from '../google-oauth.interface';
 
 @Controller('google-oauth')
 export class GoogleOauthController {
@@ -23,7 +22,7 @@ export class GoogleOauthController {
   @UseGuards(GoogleOauthGuard)
   @Get('redirect')
   oauthRedirect(
-    @Request() request: ExpressRequest & AuthResult,
+    @Request() request: ExpressRequest,
     @Response() response: ExpressResponse,
   ) {
     return this.googleOauthService.oauthRedirect(request, response);

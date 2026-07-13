@@ -1,23 +1,25 @@
 services:
-  goals-auth:
+  auth-mongo:
+    image: mongo:latest
+    container_name: auth-mongo
+    ports:
+      - 27017:27017
+    env_file:
+      - .env
+    volumes:
+      - ./data/db:/data/db
+    restart: unless-stopped
+
+  auth-service:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: auth-service
     depends_on:
-      - mongo
+      - auth-mongo
     ports:
       - 3001:3001
       - 3002:3002
-    env_file:
-      - .env
-    restart: unless-stopped
-
-  mongo:
-    image: mongo:latest
-    environment:
-      MONGODB_DATABASE: ${MONGO_DB_NAME}
-    ports:
-      - 27017:27017
     env_file:
       - .env
     restart: unless-stopped

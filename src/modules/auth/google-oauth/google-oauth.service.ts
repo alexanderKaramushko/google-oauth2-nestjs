@@ -1,9 +1,13 @@
-import { Injectable, Request, Response } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Request,
+  Response,
+} from '@nestjs/common';
 import {
   type Response as ExpressResponse,
   type Request as ExpressRequest,
 } from 'express';
-import { AuthResult } from '../google-oauth.interface';
 
 @Injectable()
 export class GoogleOauthService {
@@ -16,18 +20,41 @@ export class GoogleOauthService {
   }
 
   oauthRedirect(
-    @Request() request: ExpressRequest & AuthResult,
+    @Request() request: ExpressRequest,
     @Response() response: ExpressResponse,
   ) {
-    const idToken = request.user.id_token;
+    if (!request.user) {
+      throw new BadRequestException('Пользователь не найден');
+    }
 
-    // // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    if (!request.authInfo) {
+      throw new BadRequestException('Не найдены авторизационные данные');
+    }
+
+    const idToken = request.authInfo?.id_token;
+
     response.cookie('jwt', idToken, {
       httpOnly: true,
       sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production',
     });
 
-    return response.json(request.user);
+    try {
+      const apps: Record<string, string> = JSON.parse(
+        process.env.OAUTH_CLIENT_APPS,
+      );
+
+      const app = Object.entries(apps).find(
+        ([appId]) => appId === request.oauthState?.appId,
+      );
+
+      if (app) {
+        return response.redirect(app[1]);
+      } else {
+        return response.json(request.user);
+      }
+    } catch {
+      throw new BadRequestException('Ошибка редиректа после авторизации');
+    }
   }
 }

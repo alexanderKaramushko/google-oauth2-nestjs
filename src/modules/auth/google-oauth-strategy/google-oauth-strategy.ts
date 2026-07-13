@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, VerifyCallback } from 'passport-google-oauth2';
+import { Strategy } from 'passport-google-oauth2';
 import { UsersService } from 'src/modules/users/users.service';
 import { AuthInfo, GoogleProfile } from '../google-oauth.interface';
 import { User } from 'src/modules/users/user.model';
@@ -32,9 +32,8 @@ export class GoogleOauthStrategy extends PassportStrategy(
     request,
     accessToken: string,
     refreshToken: string,
-    result: AuthInfo,
+    authInfo: AuthInfo,
     profile: GoogleProfile,
-    done: VerifyCallback,
   ) {
     const [maybeUser] =
       (await this.usersService.findByProvider(profile.id, profile.provider)) ??
@@ -54,6 +53,6 @@ export class GoogleOauthStrategy extends PassportStrategy(
       provider: userDocument.provider,
     };
 
-    return done(null, { ...result, ...user });
+    return [user, authInfo];
   }
 }

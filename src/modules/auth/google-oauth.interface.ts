@@ -1,5 +1,3 @@
-import { User } from 'src/modules/users/user.model';
-
 type Photo = {
   value: string;
   type?: string;
@@ -38,6 +36,6 @@ export type AuthInfo = {
   id_token: string;
 };
 
-export type AuthResult = {
-  user: AuthInfo & User;
+export type OAuthState = {
+  appId: string;
 };

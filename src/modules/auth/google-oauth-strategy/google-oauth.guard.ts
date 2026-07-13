@@ -1,6 +1,73 @@
-import { Injectable } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import {
+  BadRequestException,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { AuthGuard, IAuthModuleOptions } from '@nestjs/passport';
 import { GOOGLE_AUTH_STRATEGY_NAME } from './google-oauth-strategy';
+import { JwtService } from '@nestjs/jwt';
+import { Request as ExpressRequest } from 'express';
 
 @Injectable()
-export class GoogleOauthGuard extends AuthGuard(GOOGLE_AUTH_STRATEGY_NAME) {}
+export class GoogleOauthGuard extends AuthGuard(GOOGLE_AUTH_STRATEGY_NAME) {
+  constructor(private jwtService: JwtService) {
+    super();
+  }
+
+  override getAuthenticateOptions(
+    context: ExecutionContext,
+  ): IAuthModuleOptions | undefined {
+    const request = context.switchToHttp().getRequest<ExpressRequest>();
+
+    if (request.url.includes('/google-oauth/redirect')) {
+      return undefined;
+    }
+
+    const appId = request.query.appId;
+
+    if (!appId) {
+      throw new BadRequestException('Не найден идентификатор клиента');
+    }
+
+    const stateToken = this.jwtService.sign(
+      { appId },
+      { expiresIn: '5m', secret: process.env.OAUTH_STATE_SECRET },
+    );
+
+    return {
+      state: stateToken,
+    };
+  }
+
+  override handleRequest<TUser = any>(
+    error: any,
+    user: any,
+    info: any,
+    context: ExecutionContext,
+  ): TUser {
+    const request = context.switchToHttp().getRequest<ExpressRequest>();
+    const stateToken = request.query.state as string;
+
+    try {
+      if (!stateToken) {
+        throw new Error('Невалидный state');
+      }
+
+      this.jwtService.verify(stateToken, {
+        secret: process.env.OAUTH_STATE_SECRET,
+      });
+    } catch {
+      throw new BadRequestException('Ошибка авторизации через Google');
+    }
+
+    if (error || !user) {
+      throw error || new UnauthorizedException('Не найден польльзователь');
+    }
+
+    request.oauthState = this.jwtService.decode(stateToken);
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return user;
+  }
+}
