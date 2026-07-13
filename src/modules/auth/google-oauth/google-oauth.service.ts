@@ -24,6 +24,7 @@ export class GoogleOauthService {
     // // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     response.cookie('jwt', idToken, {
       httpOnly: true,
+      sameSite: 'lax',
       secure: process.env.NODE_ENV === 'production',
     });
 
