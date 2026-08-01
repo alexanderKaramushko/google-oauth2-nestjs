@@ -1,6 +1,6 @@
 const config = {
-  title: 'Goals Service Docs',
-  tagline: 'Project and product documentation',
+  title: 'Google OAuth2 Service Docs',
+  tagline: 'Документация сервиса аутентификации',
 
   url: 'http://localhost',
   baseUrl: '/',
@@ -39,11 +39,11 @@ const config = {
           constructorName === 'WebpackBarPlugin' ||
           Boolean(
             options &&
-            typeof options === 'object' &&
-            'name' in options &&
-            'color' in options &&
-            'reporter' in options &&
-            'reporters' in options,
+              typeof options === 'object' &&
+              'name' in options &&
+              'color' in options &&
+              'reporter' in options &&
+              'reporters' in options,
           )
         );
       };
@@ -71,7 +71,7 @@ const config = {
 
   themeConfig: {
     navbar: {
-      title: 'Goals Service Docs',
+      title: 'Google OAuth2 Docs',
       items: [{ to: '/', label: 'Документация', position: 'left' }],
     },
   },
