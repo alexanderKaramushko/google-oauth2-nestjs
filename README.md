@@ -30,7 +30,7 @@ TCP-клиент
 
 Google подтверждает личность пользователя и валидность `id_token`. MongoDB
 хранит локальную запись пользователя. Подробная схема приведена в
-[обзоре архитектуры](./docs/docs/architecture/overview.md).
+[обзоре архитектуры](https://google-oauth2-nestjs.vercel.app/architecture/overview.md).
 
 ## Технологический стек
 
@@ -179,11 +179,11 @@ pnpm check:lint
 
 ### Проектная документация
 
-- [Бизнес-правила](./docs/docs/business/business-rules.md)
-- [Системная спецификация](./docs/docs/system/system-specification.md)
-- [Модель данных](./docs/docs/system/data-model.md)
-- [Обзор архитектуры](./docs/docs/architecture/overview.md)
-- [ADR: выпуск собственного JWT](./docs/docs/architecture/adr/own-jwt.md)
+- [Бизнес-правила](https://google-oauth2-nestjs.vercel.app/business/business-rules.md)
+- [Системная спецификация](https://google-oauth2-nestjs.vercel.app/system/system-specification.md)
+- [Модель данных](https://google-oauth2-nestjs.vercel.app/system/data-model.md)
+- [Обзор архитектуры](https://google-oauth2-nestjs.vercel.app/architecture/overview.md)
+- [ADR: выпуск собственного JWT](https://google-oauth2-nestjs.vercel.app/architecture/adr/own-jwt.md)
 
 ### Локальный запуск документации
 
