@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-google-oauth2';
 import { UsersService } from 'src/modules/users/users.service';
-import { AuthInfo, GoogleProfile } from '../google-oauth.interface';
+import { AuthInfo, GoogleProfile } from '../open-id.interface';
 import { User } from 'src/modules/users/user.model';
 
 export const GOOGLE_AUTH_STRATEGY_NAME = 'google';
@@ -12,7 +12,7 @@ export const GOOGLE_AUTH_STRATEGY_NAME = 'google';
 const VALIDATE_ARITY = 6;
 
 @Injectable()
-export class GoogleOauthStrategy extends PassportStrategy(
+export class GoogleAuthStrategy extends PassportStrategy(
   Strategy,
   GOOGLE_AUTH_STRATEGY_NAME,
   VALIDATE_ARITY,
@@ -21,7 +21,7 @@ export class GoogleOauthStrategy extends PassportStrategy(
     super({
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: process.env.OAUTH_CALLBACK_HOST + '/google-oauth/redirect',
+      callbackURL: process.env.OAUTH_CALLBACK_URL,
       scope: ['profile', 'openid'],
       passReqToCallback: true,
       proxy: true,

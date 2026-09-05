@@ -10,7 +10,7 @@ import {
 } from 'express';
 
 @Injectable()
-export class GoogleOauthService {
+export class GoogleAuthService {
   constructor() {}
 
   logout(@Response() response: ExpressResponse) {

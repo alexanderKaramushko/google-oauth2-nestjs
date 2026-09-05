@@ -1,17 +1,17 @@
 import { TestingModule } from '@nestjs/testing';
-import { GoogleOauthStrategy } from './google-oauth-strategy';
+import { GoogleAuthStrategy } from './google-auth-strategy';
 import { createTestingModule } from 'src/helpers/createTestingModule';
 import { UsersService } from 'src/modules/users/users.service';
 
-describe('GoogleOauthStrategy', () => {
-  let provider: GoogleOauthStrategy;
+describe('GoogleAuthStrategy', () => {
+  let provider: GoogleAuthStrategy;
 
   beforeEach(async () => {
     const module: TestingModule = await createTestingModule({
-      providers: [GoogleOauthStrategy, UsersService],
+      providers: [GoogleAuthStrategy, UsersService],
     }).compile();
 
-    provider = module.get<GoogleOauthStrategy>(GoogleOauthStrategy);
+    provider = module.get<GoogleAuthStrategy>(GoogleAuthStrategy);
   });
 
   it('should be defined', () => {

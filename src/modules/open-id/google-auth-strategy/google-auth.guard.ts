@@ -5,12 +5,12 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard, IAuthModuleOptions } from '@nestjs/passport';
-import { GOOGLE_AUTH_STRATEGY_NAME } from './google-oauth-strategy';
+import { GOOGLE_AUTH_STRATEGY_NAME } from './google-auth-strategy';
 import { JwtService } from '@nestjs/jwt';
 import { Request as ExpressRequest } from 'express';
 
 @Injectable()
-export class GoogleOauthGuard extends AuthGuard(GOOGLE_AUTH_STRATEGY_NAME) {
+export class GoogleAuthGuard extends AuthGuard(GOOGLE_AUTH_STRATEGY_NAME) {
   constructor(private jwtService: JwtService) {
     super();
   }

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AuthModule } from './modules/auth/auth.module';
+import { OpenIdModule } from './modules/open-id/open-id.module';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './modules/users/users.module';
@@ -7,7 +7,7 @@ import { AuthModule as MicroservicesAuthModule } from './microservices/auth/auth
 
 @Module({
   imports: [
-    AuthModule,
+    OpenIdModule,
     MicroservicesAuthModule,
     UsersModule,
     ConfigModule.forRoot(),

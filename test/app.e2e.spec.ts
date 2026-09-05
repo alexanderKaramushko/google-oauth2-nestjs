@@ -5,7 +5,7 @@ import { App } from 'supertest/types';
 import { getConnectionToken, getModelToken } from '@nestjs/mongoose';
 import { AppModule } from '../src/app.module';
 import { User } from '../src/modules/users/user.model';
-import { GoogleOauthStrategy } from '../src/modules/auth/google-oauth-strategy/google-oauth-strategy';
+import { GoogleAuthStrategy } from '../src/modules/open-id/google-auth-strategy/google-auth-strategy';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication<App>;
@@ -18,7 +18,7 @@ describe('AppController (e2e)', () => {
       .useValue({ close: jest.fn() })
       .overrideProvider(getModelToken(User.name))
       .useValue({})
-      .overrideProvider(GoogleOauthStrategy)
+      .overrideProvider(GoogleAuthStrategy)
       .useValue({})
       .compile();
 
