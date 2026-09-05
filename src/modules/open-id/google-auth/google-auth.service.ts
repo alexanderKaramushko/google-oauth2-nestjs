@@ -19,7 +19,7 @@ export class GoogleAuthService {
     return response.json('Logged out');
   }
 
-  oauthRedirect(
+  oauthCallback(
     @Request() request: ExpressRequest,
     @Response() response: ExpressResponse,
   ) {

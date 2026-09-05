@@ -66,9 +66,6 @@ flowchart TD
 
 `GET /google-oauth/redirect`
 
-Callback URL формируется как
-`OAUTH_CALLBACK_HOST + /google-oauth/redirect`.
-
 1. Guard получает `state` из query и проверяет подпись и срок жизни.
 2. Passport strategy получает Google profile и `authInfo`.
 3. Пользователь ищется в MongoDB по `profile.id` и `profile.provider`.

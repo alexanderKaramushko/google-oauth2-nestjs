@@ -6,7 +6,7 @@ import {
   type Request as ExpressRequest,
 } from 'express';
 
-@Controller('google-auth')
+@Controller('auth')
 export class GoogleAuthController {
   constructor(private googleAuthService: GoogleAuthService) {}
 
@@ -20,11 +20,11 @@ export class GoogleAuthController {
   }
 
   @UseGuards(GoogleAuthGuard)
-  @Get('redirect')
-  oauthRedirect(
+  @Get('callback')
+  oauthCallback(
     @Request() request: ExpressRequest,
     @Response() response: ExpressResponse,
   ) {
-    return this.googleAuthService.oauthRedirect(request, response);
+    return this.googleAuthService.oauthCallback(request, response);
   }
 }
