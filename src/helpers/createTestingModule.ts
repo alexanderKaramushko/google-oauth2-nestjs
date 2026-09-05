@@ -2,6 +2,7 @@ import { ModuleMetadata } from '@nestjs/common';
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModuleOptions } from '@nestjs/testing';
 import { OAUTH_CLIENT } from 'src/modules/oauth/oauth.tokens';
+import { TokenService } from 'src/modules/token/token.service';
 
 export function createTestingModule(
   metadata: ModuleMetadata,
@@ -28,6 +29,13 @@ export function createTestingModule(
                 provider: 'google',
               },
             ]),
+          },
+        },
+        {
+          provide: TokenService,
+          useValue: {
+            createAccessToken: jest.fn(),
+            isTokenVerified: jest.fn(),
           },
         },
         ...(metadata.providers ?? []),

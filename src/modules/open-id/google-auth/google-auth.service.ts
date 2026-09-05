@@ -8,13 +8,14 @@ import {
   type Response as ExpressResponse,
   type Request as ExpressRequest,
 } from 'express';
+import { TokenService } from 'src/modules/token/token.service';
 
 @Injectable()
 export class GoogleAuthService {
-  constructor() {}
+  constructor(private tokenService: TokenService) {}
 
   logout(@Response() response: ExpressResponse) {
-    response.clearCookie('jwt');
+    response.clearCookie('access_token');
 
     return response.json('Logged out');
   }
@@ -31,14 +32,6 @@ export class GoogleAuthService {
       throw new BadRequestException('Не найдены авторизационные данные');
     }
 
-    const idToken = request.authInfo?.id_token;
-
-    response.cookie('jwt', idToken, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-    });
-
     try {
       const apps: Record<string, string> = JSON.parse(
         process.env.OAUTH_CLIENT_APPS,
@@ -49,7 +42,20 @@ export class GoogleAuthService {
       );
 
       if (app) {
-        return response.redirect(app[1]);
+        const appUrl = app[1];
+
+        const accessToken = this.tokenService.createAccessToken({
+          sub: request.user.subjectId,
+        });
+
+        response.cookie('access_token', accessToken, {
+          httpOnly: true,
+          sameSite: 'lax',
+          secure: process.env.NODE_ENV === 'production',
+          domain: process.env.DOMAIN,
+        });
+
+        return response.redirect(appUrl);
       } else {
         return response.json(request.user);
       }

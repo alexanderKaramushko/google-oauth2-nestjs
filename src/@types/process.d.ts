@@ -13,5 +13,10 @@ declare namespace NodeJS {
     SERVICE_PORT: string;
     MICROSERVICE_HOST: string;
     MICROSERVICE_PORT: string;
+    PRIVATE_KEY: string;
+    PUBLIC_KEY: string;
+    EXPIRES_IN: `${number}${'h'}`;
+    ISSUER: string;
+    DOMAIN: string;
   }
 }
