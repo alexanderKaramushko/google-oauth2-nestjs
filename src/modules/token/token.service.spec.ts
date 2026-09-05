@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import { TokenService } from './token.service';
+import { ConfigService } from '@nestjs/config';
+import { createConfigServiceMock } from 'src/helpers/createTestingModule';
 
 describe('TokenService', () => {
   let service: TokenService;
@@ -15,6 +17,10 @@ describe('TokenService', () => {
             sign: jest.fn(),
             verify: jest.fn(),
           },
+        },
+        {
+          provide: ConfigService,
+          useFactory: createConfigServiceMock,
         },
       ],
     }).compile();

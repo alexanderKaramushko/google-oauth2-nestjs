@@ -9,10 +9,15 @@ import {
   type Request as ExpressRequest,
 } from 'express';
 import { TokenService } from 'src/modules/token/token.service';
+import { ConfigService } from '@nestjs/config';
+import type { EnvironmentVariables } from 'src/infra/config/config.module';
 
 @Injectable()
 export class GoogleAuthService {
-  constructor(private tokenService: TokenService) {}
+  constructor(
+    private tokenService: TokenService,
+    private configService: ConfigService<EnvironmentVariables, true>,
+  ) {}
 
   logout(@Response() response: ExpressResponse) {
     response.clearCookie('access_token');
@@ -34,7 +39,7 @@ export class GoogleAuthService {
 
     try {
       const apps: Record<string, string> = JSON.parse(
-        process.env.OAUTH_CLIENT_APPS,
+        this.configService.getOrThrow('OAUTH_CLIENT_APPS', { infer: true }),
       );
 
       const app = Object.entries(apps).find(
@@ -51,8 +56,10 @@ export class GoogleAuthService {
         response.cookie('access_token', accessToken, {
           httpOnly: true,
           sameSite: 'lax',
-          secure: process.env.NODE_ENV === 'production',
-          domain: process.env.DOMAIN,
+          secure:
+            this.configService.getOrThrow('NODE_ENV', { infer: true }) ===
+            'production',
+          domain: this.configService.getOrThrow('DOMAIN', { infer: true }),
         });
 
         return response.redirect(appUrl);

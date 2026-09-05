@@ -1,21 +1,15 @@
 import {
   CanActivate,
   ExecutionContext,
-  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { OAuth2Client } from 'google-auth-library';
-import { OAUTH_CLIENT } from 'src/modules/oauth/oauth.tokens';
 import { TokenService } from 'src/modules/token/token.service';
 
 @Injectable()
 export class JwtGuard implements CanActivate {
-  constructor(
-    @Inject(OAUTH_CLIENT) private oAuthClient: OAuth2Client,
-    private tokenService: TokenService,
-  ) {}
+  constructor(private tokenService: TokenService) {}
 
   canActivate(context: ExecutionContext): boolean {
     const token =
