@@ -13,8 +13,14 @@ import path from 'node:path';
         const keysPath = path.resolve(process.cwd(), './keys');
 
         return {
-          privateKey: fs.readFileSync(path.resolve(keysPath, 'private.pem')),
-          publicKey: fs.readFileSync(path.resolve(keysPath, 'public.pem')),
+          privateKey: fs.readFileSync(
+            path.resolve(keysPath, 'private.pem'),
+            'utf-8',
+          ),
+          publicKey: fs.readFileSync(
+            path.resolve(keysPath, 'public.pem'),
+            'utf-8',
+          ),
         };
       },
     }),
