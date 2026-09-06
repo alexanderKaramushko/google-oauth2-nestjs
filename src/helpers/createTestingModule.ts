@@ -20,8 +20,6 @@ const testEnvironment: EnvironmentVariables = {
   SERVICE_PORT: 3001,
   MICROSERVICE_HOST: '0.0.0.0',
   MICROSERVICE_PORT: 3002,
-  PRIVATE_KEY: 'test_private_key',
-  PUBLIC_KEY: 'test_public_key',
   EXPIRES_IN: '1h',
   ISSUER: 'test_issuer',
   DOMAIN: 'localhost',

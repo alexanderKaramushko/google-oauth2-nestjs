@@ -17,8 +17,6 @@ export interface EnvironmentVariables {
   SERVICE_PORT: number;
   MICROSERVICE_HOST: string;
   MICROSERVICE_PORT: number;
-  PRIVATE_KEY: string;
-  PUBLIC_KEY: string;
   EXPIRES_IN: `${number}h`;
   ISSUER: string;
   DOMAIN: string;
@@ -43,8 +41,6 @@ const validationSchema = Joi.object({
   SERVICE_PORT: Joi.number().port().default(3001),
   MICROSERVICE_HOST: Joi.string().trim().default('0.0.0.0'),
   MICROSERVICE_PORT: Joi.number().port().default(3002),
-  PRIVATE_KEY: Joi.string().required(),
-  PUBLIC_KEY: Joi.string().required(),
   EXPIRES_IN: Joi.string()
     .pattern(/^\d+h$/)
     .required(),

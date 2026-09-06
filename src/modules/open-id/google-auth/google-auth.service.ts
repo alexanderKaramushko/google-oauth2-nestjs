@@ -46,21 +46,21 @@ export class GoogleAuthService {
         ([appId]) => appId === request.oauthState?.appId,
       );
 
+      const accessToken = this.tokenService.createAccessToken({
+        sub: request.user.subjectId,
+      });
+
+      response.cookie('access_token', accessToken, {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure:
+          this.configService.getOrThrow('NODE_ENV', { infer: true }) ===
+          'production',
+        domain: this.configService.getOrThrow('DOMAIN', { infer: true }),
+      });
+
       if (app) {
         const appUrl = app[1];
-
-        const accessToken = this.tokenService.createAccessToken({
-          sub: request.user.subjectId,
-        });
-
-        response.cookie('access_token', accessToken, {
-          httpOnly: true,
-          sameSite: 'lax',
-          secure:
-            this.configService.getOrThrow('NODE_ENV', { infer: true }) ===
-            'production',
-          domain: this.configService.getOrThrow('DOMAIN', { infer: true }),
-        });
 
         return response.redirect(appUrl);
       } else {

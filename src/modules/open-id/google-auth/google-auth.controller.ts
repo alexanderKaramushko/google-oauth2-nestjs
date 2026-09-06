@@ -6,7 +6,7 @@ import {
   type Request as ExpressRequest,
 } from 'express';
 
-@Controller('auth')
+@Controller('id')
 export class GoogleAuthController {
   constructor(private googleAuthService: GoogleAuthService) {}
 
