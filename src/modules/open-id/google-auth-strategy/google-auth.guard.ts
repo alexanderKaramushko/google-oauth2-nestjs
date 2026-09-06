@@ -25,7 +25,7 @@ export class GoogleAuthGuard extends AuthGuard(GOOGLE_AUTH_STRATEGY_NAME) {
   ): IAuthModuleOptions | undefined {
     const request = context.switchToHttp().getRequest<ExpressRequest>();
 
-    if (request.url.includes('/google-oauth/redirect')) {
+    if (request.url.includes('/id/callback')) {
       return undefined;
     }
 
