@@ -1,2 +1,12 @@
-process.env.CLIENT_ID = 'test_id';
-process.env.CLIENT_SECRET = 'test_secret';
+process.env.NODE_ENV = 'test';
+process.env.CLIENT_ID = 'test_client_id';
+process.env.CLIENT_SECRET = 'test_client_secret';
+process.env.OAUTH_CALLBACK_URL = 'http://localhost:3001/auth/callback';
+process.env.OAUTH_CLIENT_APPS = '{}';
+process.env.OAUTH_STATE_SECRET = 'test_oauth_state_secret';
+process.env.MONGO_DB_NAME = 'test';
+process.env.MONGO_DB_PORT = '27017';
+process.env.MONGO_DB_HOST = 'localhost';
+process.env.EXPIRES_IN = '1h';
+process.env.ISSUER = 'test_issuer';
+process.env.DOMAIN = 'localhost';

@@ -1,7 +1,7 @@
 import {
   AuthInfo as AuthInfoExtend,
   OAuthState,
-} from 'src/modules/auth/google-oauth.interface';
+} from 'src/modules/open-id/open-id.interface';
 import { User as UserExtend } from 'src/modules/users/user.model';
 
 declare global {

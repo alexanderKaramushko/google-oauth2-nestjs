@@ -1,23 +1,21 @@
 import {
   CanActivate,
   ExecutionContext,
-  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { OAuth2Client } from 'google-auth-library';
-import { OAUTH_CLIENT } from 'src/modules/oauth/oauth.tokens';
+import { TokenService } from 'src/modules/token/token.service';
 
 @Injectable()
 export class JwtGuard implements CanActivate {
-  constructor(@Inject(OAUTH_CLIENT) private oAuthClient: OAuth2Client) {}
+  constructor(private tokenService: TokenService) {}
 
-  async canActivate(context: ExecutionContext): Promise<boolean> {
+  canActivate(context: ExecutionContext): boolean {
     const token =
       context.getType() === 'rpc'
         ? context.switchToRpc().getData<string | null>()
-        : (context.switchToHttp().getRequest<Request>().cookies.jwt as
+        : (context.switchToHttp().getRequest<Request>().cookies.access_token as
             | string
             | null);
 
@@ -25,15 +23,10 @@ export class JwtGuard implements CanActivate {
       throw new UnauthorizedException();
     }
 
-    const ticket = await this.oAuthClient.verifyIdToken({
-      idToken: token,
-      audience: process.env.CLIENT_ID,
-    });
-
-    if (!ticket) {
+    if (!this.tokenService.isTokenVerified(token)) {
       throw new UnauthorizedException();
     }
 
-    return !!ticket.getPayload();
+    return true;
   }
 }

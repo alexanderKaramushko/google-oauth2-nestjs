@@ -62,33 +62,21 @@ cp .env.example .env
 
 Основные переменные:
 
-| Переменная            | Назначение                                                   |
-| --------------------- | ------------------------------------------------------------ |
-| `CLIENT_ID`           | Google OAuth client ID и ожидаемый `audience` для `id_token` |
-| `CLIENT_SECRET`       | Google OAuth client secret                                   |
-| `OAUTH_CALLBACK_HOST` | Публичный origin auth-сервиса без callback path              |
-| `OAUTH_STATE_SECRET`  | Секрет подписи краткоживущего `state`                        |
-| `OAUTH_CLIENT_APPS`   | JSON-объект `appId → URL` для редиректа после входа          |
-| `MONGO_DB_HOST`       | Хост MongoDB                                                 |
-| `MONGO_DB_PORT`       | Порт MongoDB                                                 |
-| `MONGO_DB_NAME`       | Имя базы данных                                              |
-| `SERVICE_HOST`        | Адрес HTTP-сервера; по умолчанию `0.0.0.0`                   |
-| `SERVICE_PORT`        | Порт HTTP-сервера; по умолчанию `3001`                       |
-| `MICROSERVICE_HOST`   | Адрес TCP-микросервиса; по умолчанию `0.0.0.0`               |
-| `MICROSERVICE_PORT`   | Порт TCP-микросервиса; по умолчанию `3002`                   |
-| `NODE_ENV`            | В `production` включает флаг `secure` у auth-cookie          |
-
-Пример формата карты клиентских приложений:
-
-```dotenv
-OAUTH_CLIENT_APPS={"<app-id>":"http://localhost:3000"}
-```
-
-Callback URL в Google Cloud Console должен совпадать с:
-
-```text
-<OAUTH_CALLBACK_HOST>/google-oauth/redirect
-```
+| Переменная           | Назначение                                                   |
+| -------------------- | ------------------------------------------------------------ |
+| `CLIENT_ID`          | Google OAuth client ID и ожидаемый `audience` для `id_token` |
+| `CLIENT_SECRET`      | Google OAuth client secret                                   |
+| `OAUTH_CALLBACK_URL` | Публичный callback url                                       |
+| `OAUTH_STATE_SECRET` | Секрет подписи краткоживущего `state`                        |
+| `OAUTH_CLIENT_APPS`  | JSON-объект `appId → URL` для редиректа после входа          |
+| `MONGO_DB_HOST`      | Хост MongoDB                                                 |
+| `MONGO_DB_PORT`      | Порт MongoDB                                                 |
+| `MONGO_DB_NAME`      | Имя базы данных                                              |
+| `SERVICE_HOST`       | Адрес HTTP-сервера; по умолчанию `0.0.0.0`                   |
+| `SERVICE_PORT`       | Порт HTTP-сервера; по умолчанию `3001`                       |
+| `MICROSERVICE_HOST`  | Адрес TCP-микросервиса; по умолчанию `0.0.0.0`               |
+| `MICROSERVICE_PORT`  | Порт TCP-микросервиса; по умолчанию `3002`                   |
+| `NODE_ENV`           | В `production` включает флаг `secure` у auth-cookie          |
 
 ### Запуск через Docker
 
@@ -127,7 +115,7 @@ tuna http 3001
 ```
 
 Полученный origin необходимо добавить в Google Cloud Console и указать в
-`OAUTH_CALLBACK_HOST`.
+`OAUTH_CALLBACK_URL`.
 
 #### Отладка
 

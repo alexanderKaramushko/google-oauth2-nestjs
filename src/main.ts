@@ -2,17 +2,21 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import cookieParser from 'cookie-parser';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { ConfigService } from '@nestjs/config';
+import type { EnvironmentVariables } from './infra/config/config.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService =
+    app.get<ConfigService<EnvironmentVariables, true>>(ConfigService);
 
   app.use(cookieParser());
 
   app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.TCP,
     options: {
-      host: process.env.MICROSERVICE_HOST ?? '0.0.0.0',
-      port: Number.parseInt(process.env.MICROSERVICE_PORT ?? '3002', 10),
+      host: configService.getOrThrow('MICROSERVICE_HOST', { infer: true }),
+      port: configService.getOrThrow('MICROSERVICE_PORT', { infer: true }),
     },
   });
 
@@ -21,8 +25,8 @@ async function bootstrap() {
   await app.startAllMicroservices();
 
   await app.listen(
-    Number.parseInt(process.env.SERVICE_PORT ?? '3001', 10),
-    process.env.SERVICE_HOST ?? '0.0.0.0',
+    configService.getOrThrow('SERVICE_PORT', { infer: true }),
+    configService.getOrThrow('SERVICE_HOST', { infer: true }),
   );
 }
 

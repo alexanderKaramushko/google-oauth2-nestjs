@@ -8,18 +8,24 @@ import {
   type Response as ExpressResponse,
   type Request as ExpressRequest,
 } from 'express';
+import { TokenService } from 'src/modules/token/token.service';
+import { ConfigService } from '@nestjs/config';
+import type { EnvironmentVariables } from 'src/infra/config/config.module';
 
 @Injectable()
-export class GoogleOauthService {
-  constructor() {}
+export class GoogleAuthService {
+  constructor(
+    private tokenService: TokenService,
+    private configService: ConfigService<EnvironmentVariables, true>,
+  ) {}
 
   logout(@Response() response: ExpressResponse) {
-    response.clearCookie('jwt');
+    response.clearCookie('access_token');
 
     return response.json('Logged out');
   }
 
-  oauthRedirect(
+  oauthCallback(
     @Request() request: ExpressRequest,
     @Response() response: ExpressResponse,
   ) {
@@ -31,25 +37,32 @@ export class GoogleOauthService {
       throw new BadRequestException('Не найдены авторизационные данные');
     }
 
-    const idToken = request.authInfo?.id_token;
-
-    response.cookie('jwt', idToken, {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-    });
-
     try {
       const apps: Record<string, string> = JSON.parse(
-        process.env.OAUTH_CLIENT_APPS,
+        this.configService.getOrThrow('OAUTH_CLIENT_APPS', { infer: true }),
       );
 
       const app = Object.entries(apps).find(
         ([appId]) => appId === request.oauthState?.appId,
       );
 
+      const accessToken = this.tokenService.createAccessToken({
+        sub: request.user.subjectId,
+      });
+
+      response.cookie('access_token', accessToken, {
+        httpOnly: true,
+        sameSite: 'lax',
+        secure:
+          this.configService.getOrThrow('NODE_ENV', { infer: true }) ===
+          'production',
+        domain: this.configService.getOrThrow('DOMAIN', { infer: true }),
+      });
+
       if (app) {
-        return response.redirect(app[1]);
+        const appUrl = app[1];
+
+        return response.redirect(appUrl);
       } else {
         return response.json(request.user);
       }

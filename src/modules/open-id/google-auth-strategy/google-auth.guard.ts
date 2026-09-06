@@ -5,13 +5,18 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthGuard, IAuthModuleOptions } from '@nestjs/passport';
-import { GOOGLE_AUTH_STRATEGY_NAME } from './google-oauth-strategy';
+import { GOOGLE_AUTH_STRATEGY_NAME } from './google-auth-strategy';
 import { JwtService } from '@nestjs/jwt';
 import { Request as ExpressRequest } from 'express';
+import { ConfigService } from '@nestjs/config';
+import type { EnvironmentVariables } from 'src/infra/config/config.module';
 
 @Injectable()
-export class GoogleOauthGuard extends AuthGuard(GOOGLE_AUTH_STRATEGY_NAME) {
-  constructor(private jwtService: JwtService) {
+export class GoogleAuthGuard extends AuthGuard(GOOGLE_AUTH_STRATEGY_NAME) {
+  constructor(
+    private jwtService: JwtService,
+    private configService: ConfigService<EnvironmentVariables, true>,
+  ) {
     super();
   }
 
@@ -32,7 +37,12 @@ export class GoogleOauthGuard extends AuthGuard(GOOGLE_AUTH_STRATEGY_NAME) {
 
     const stateToken = this.jwtService.sign(
       { appId },
-      { expiresIn: '5m', secret: process.env.OAUTH_STATE_SECRET },
+      {
+        expiresIn: '5m',
+        secret: this.configService.getOrThrow('OAUTH_STATE_SECRET', {
+          infer: true,
+        }),
+      },
     );
 
     return {
@@ -55,7 +65,9 @@ export class GoogleOauthGuard extends AuthGuard(GOOGLE_AUTH_STRATEGY_NAME) {
       }
 
       this.jwtService.verify(stateToken, {
-        secret: process.env.OAUTH_STATE_SECRET,
+        secret: this.configService.getOrThrow('OAUTH_STATE_SECRET', {
+          infer: true,
+        }),
       });
     } catch {
       throw new BadRequestException('Ошибка авторизации через Google');

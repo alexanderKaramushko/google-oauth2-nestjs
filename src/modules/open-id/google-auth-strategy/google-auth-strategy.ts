@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-google-oauth2';
 import { UsersService } from 'src/modules/users/users.service';
-import { AuthInfo, GoogleProfile } from '../google-oauth.interface';
+import { AuthInfo, GoogleProfile } from '../open-id.interface';
 import { User } from 'src/modules/users/user.model';
+import { ConfigService } from '@nestjs/config';
+import type { EnvironmentVariables } from 'src/infra/config/config.module';
 
 export const GOOGLE_AUTH_STRATEGY_NAME = 'google';
 
@@ -12,16 +14,21 @@ export const GOOGLE_AUTH_STRATEGY_NAME = 'google';
 const VALIDATE_ARITY = 6;
 
 @Injectable()
-export class GoogleOauthStrategy extends PassportStrategy(
+export class GoogleAuthStrategy extends PassportStrategy(
   Strategy,
   GOOGLE_AUTH_STRATEGY_NAME,
   VALIDATE_ARITY,
 ) {
-  constructor(private usersService: UsersService) {
+  constructor(
+    private usersService: UsersService,
+    configService: ConfigService<EnvironmentVariables, true>,
+  ) {
     super({
-      clientID: process.env.CLIENT_ID,
-      clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: process.env.OAUTH_CALLBACK_HOST + '/google-oauth/redirect',
+      clientID: configService.getOrThrow('CLIENT_ID', { infer: true }),
+      clientSecret: configService.getOrThrow('CLIENT_SECRET', { infer: true }),
+      callbackURL: configService.getOrThrow('OAUTH_CALLBACK_URL', {
+        infer: true,
+      }),
       scope: ['profile', 'openid'],
       passReqToCallback: true,
       proxy: true,
