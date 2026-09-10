@@ -2,7 +2,9 @@ import { TestingModule } from '@nestjs/testing';
 import { GoogleAuthService } from './google-auth.service';
 import { createTestingModule } from 'src/helpers/create-testing-module';
 import { ConfigService } from '@nestjs/config';
-import { InternalServerErrorException } from '@nestjs/common';
+import { GoogleAuthUserNotFoundException } from './exceptions/google-auth-user-not-found.exception';
+import { GoogleAuthDataNotFoundException } from './exceptions/google-auth-data-not-found.exception';
+import { OAuthClientAppsReadException } from './exceptions/oauth-client-apps-read.exception';
 
 describe('GoogleAuthService', () => {
   let service: GoogleAuthService;
@@ -46,7 +48,7 @@ describe('GoogleAuthService', () => {
           user: undefined,
           appId: 'goals',
         });
-      }).toThrow(new InternalServerErrorException('Пользователь не найден'));
+      }).toThrow(GoogleAuthUserNotFoundException);
     });
 
     it('выбрасывает ошибку, если не передан auth state', () => {
@@ -58,9 +60,22 @@ describe('GoogleAuthService', () => {
             provider: 'google',
           },
         });
-      }).toThrow(
-        new InternalServerErrorException('Не найдены авторизационные данные'),
-      );
+      }).toThrow(GoogleAuthDataNotFoundException);
+    });
+
+    it('выбрасывает ошибку, если OAUTH_CLIENT_APPS не удалось прочитать', () => {
+      getOrThrowMock.mockReturnValue('invalid json');
+
+      expect(() => {
+        service.processOAuthCallback({
+          user: {
+            name: 'Name',
+            subjectId: '1',
+            provider: 'google',
+          },
+          appId: 'goals',
+        });
+      }).toThrow(OAuthClientAppsReadException);
     });
   });
 });
