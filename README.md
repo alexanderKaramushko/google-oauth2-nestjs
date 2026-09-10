@@ -152,12 +152,12 @@ pnpm check:lint
 
 #### HTTP
 
-| Метод и путь                         | Назначение                                    |
-| ------------------------------------ | --------------------------------------------- |
-| `GET /google-oauth/login?appId=<id>` | начать Google OAuth flow                      |
-| `GET /google-oauth/redirect`         | callback Google OAuth                         |
-| `GET /google-oauth/logout`           | удалить локальную cookie `jwt`                |
-| `GET /users/profile`                 | получить локальный профиль по текущему токену |
+| Метод и путь               | Назначение                                    |
+| -------------------------- | --------------------------------------------- |
+| `GET /id/login?appId=<id>` | начать Google OAuth flow                      |
+| `GET /id/redirect`         | callback Google OAuth                         |
+| `GET /id/logout`           | удалить локальную cookie `jwt`                |
+| `GET /users/profile`       | получить локальный профиль по текущему токену |
 
 #### TCP
 

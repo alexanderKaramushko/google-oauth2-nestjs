@@ -14,12 +14,12 @@ API нет глобального префикса и версионирован
 
 ### HTTP
 
-| Метод и путь                         | Защита             | Успешный результат                                     |
-| ------------------------------------ | ------------------ | ------------------------------------------------------ |
-| `GET /google-oauth/login?appId=<id>` | Google OAuth guard | редирект в Google                                      |
-| `GET /google-oauth/redirect`         | Google OAuth guard | редирект в клиентское приложение или JSON пользователя |
-| `GET /google-oauth/logout`           | нет                | `200`, строка `Logged out`                             |
-| `GET /users/profile`                 | `JwtGuard`         | `200`, массив локальных пользователей                  |
+| Метод и путь               | Защита             | Успешный результат                                     |
+| -------------------------- | ------------------ | ------------------------------------------------------ |
+| `GET /id/login?appId=<id>` | Google OAuth guard | редирект в Google                                      |
+| `GET /id/redirect`         | Google OAuth guard | редирект в клиентское приложение или JSON пользователя |
+| `GET /id/logout`           | нет                | `200`, строка `Logged out`                             |
+| `GET /users/profile`       | `JwtGuard`         | `200`, массив локальных пользователей                  |
 
 ### TCP
 
@@ -31,11 +31,11 @@ API нет глобального префикса и версионирован
 
 ```mermaid
 flowchart TD
-    A[GET /google-oauth/login с appId] --> B{appId передан?}
+    A[GET /id/login с appId] --> B{appId передан?}
     B -->|нет| C[400 Bad Request]
     B -->|да| D[Подписать state JWT на 5 минут]
     D --> E[Редирект в Google OAuth]
-    E --> F[Google callback /google-oauth/redirect]
+    E --> F[Google callback /id/redirect]
     F --> G{state существует и валиден?}
     G -->|нет| H[400 Bad Request]
     G -->|да| I[Получить Google profile и authInfo]
@@ -51,7 +51,7 @@ flowchart TD
 
 ### Начало входа
 
-`GET /google-oauth/login?appId=<client-app-id>`
+`GET /id/login?appId=<client-app-id>`
 
 1. `GoogleOauthGuard` требует непустой query-параметр `appId`.
 2. Guard подписывает `state` через `JwtService` с секретом
@@ -64,7 +64,7 @@ flowchart TD
 
 ### Callback Google
 
-`GET /google-oauth/redirect`
+`GET /id/redirect`
 
 1. Guard получает `state` из query и проверяет подпись и срок жизни.
 2. Passport strategy получает Google profile и `authInfo`.
@@ -92,7 +92,7 @@ Cookie имеет параметры `httpOnly: true`, `sameSite: lax`; `secure`
 
 ## Выход
 
-`GET /google-oauth/logout`
+`GET /id/logout`
 
 Endpoint не защищён. Он удаляет cookie `jwt` и возвращает JSON-строку
 `Logged out`. Токен у Google не отзывается, Google-сессия не завершается.
