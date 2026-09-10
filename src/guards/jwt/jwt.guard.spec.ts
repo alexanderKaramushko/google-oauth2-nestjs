@@ -1,6 +1,6 @@
 import { TestingModule } from '@nestjs/testing';
 import { JwtGuard } from './jwt.guard';
-import { createTestingModule } from 'src/helpers/createTestingModule';
+import { createTestingModule } from 'src/helpers/create-testing-module';
 
 describe('JwtGuard', () => {
   let provider: JwtGuard;
