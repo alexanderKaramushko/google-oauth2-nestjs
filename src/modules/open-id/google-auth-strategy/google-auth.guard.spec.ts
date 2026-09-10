@@ -1,6 +1,6 @@
 import { TestingModule } from '@nestjs/testing';
 import { GoogleAuthGuard } from './google-auth.guard';
-import { createTestingModule } from 'src/helpers/createTestingModule';
+import { createTestingModule } from 'src/helpers/create-testing-module';
 
 describe('GoogleAuthGuard', () => {
   let provider: GoogleAuthGuard;

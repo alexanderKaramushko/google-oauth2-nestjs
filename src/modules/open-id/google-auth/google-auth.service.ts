@@ -1,16 +1,8 @@
-import {
-  BadRequestException,
-  Injectable,
-  Request,
-  Response,
-} from '@nestjs/common';
-import {
-  type Response as ExpressResponse,
-  type Request as ExpressRequest,
-} from 'express';
+import { InternalServerErrorException, Injectable } from '@nestjs/common';
 import { TokenService } from 'src/modules/token/token.service';
 import { ConfigService } from '@nestjs/config';
 import type { EnvironmentVariables } from 'src/infra/config/config.module';
+import { User } from 'src/modules/users/user.model';
 
 @Injectable()
 export class GoogleAuthService {
@@ -19,55 +11,40 @@ export class GoogleAuthService {
     private configService: ConfigService<EnvironmentVariables, true>,
   ) {}
 
-  logout(@Response() response: ExpressResponse) {
-    response.clearCookie('access_token');
+  processOAuthCallback(payload: { user?: User; appId?: string }) {
+    const { user, appId } = payload;
 
-    return response.json('Logged out');
-  }
-
-  oauthCallback(
-    @Request() request: ExpressRequest,
-    @Response() response: ExpressResponse,
-  ) {
-    if (!request.user) {
-      throw new BadRequestException('Пользователь не найден');
+    if (!user) {
+      throw new InternalServerErrorException('Пользователь не найден');
     }
 
-    if (!request.authInfo) {
-      throw new BadRequestException('Не найдены авторизационные данные');
+    if (!appId) {
+      throw new InternalServerErrorException(
+        'Не найдены авторизационные данные',
+      );
     }
+
+    let apps: Record<string, string> = {};
 
     try {
-      const apps: Record<string, string> = JSON.parse(
+      apps = JSON.parse(
         this.configService.getOrThrow('OAUTH_CLIENT_APPS', { infer: true }),
       );
-
-      const app = Object.entries(apps).find(
-        ([appId]) => appId === request.oauthState?.appId,
+    } catch (error) {
+      throw new InternalServerErrorException(
+        `Не удалось прочитать OAUTH_CLIENT_APPS: ${error.message}`,
       );
-
-      const accessToken = this.tokenService.createAccessToken({
-        sub: request.user.subjectId,
-      });
-
-      response.cookie('access_token', accessToken, {
-        httpOnly: true,
-        sameSite: 'lax',
-        secure:
-          this.configService.getOrThrow('NODE_ENV', { infer: true }) ===
-          'production',
-        domain: this.configService.getOrThrow('DOMAIN', { infer: true }),
-      });
-
-      if (app) {
-        const appUrl = app[1];
-
-        return response.redirect(appUrl);
-      } else {
-        return response.json(request.user);
-      }
-    } catch {
-      throw new BadRequestException('Ошибка редиректа после авторизации');
     }
+
+    const app = Object.entries(apps).find(([envAppId]) => envAppId === appId);
+
+    const accessToken = this.tokenService.createAccessToken({
+      sub: user.subjectId,
+    });
+
+    return {
+      accessToken,
+      appUrl: app && app[1],
+    };
   }
 }
