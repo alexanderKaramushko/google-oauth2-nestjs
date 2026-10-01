@@ -39,6 +39,14 @@ export class GoogleAuthController {
       },
     );
 
+    const expiresIn = Number.parseInt(
+      this.configService.getOrThrow('EXPIRES_IN', { infer: true }),
+      10,
+    );
+
+    const minuteMs = 60 * 1000;
+    const hourMs = 60 * minuteMs;
+
     response.cookie('access_token', accessToken, {
       httpOnly: true,
       sameSite: 'lax',
@@ -46,6 +54,7 @@ export class GoogleAuthController {
         this.configService.getOrThrow('NODE_ENV', { infer: true }) ===
         'production',
       domain: this.configService.getOrThrow('DOMAIN', { infer: true }),
+      maxAge: !Number.isNaN(expiresIn) ? expiresIn * hourMs : 48 * hourMs,
     });
 
     if (appUrl) {

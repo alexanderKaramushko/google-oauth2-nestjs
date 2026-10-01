@@ -9,6 +9,7 @@ describe('GoogleAuthController', () => {
   let controller: GoogleAuthController;
 
   const processOAuthCallbackMock = jest.fn();
+  const getOrThrowMock = jest.fn();
 
   beforeEach(async () => {
     const module: TestingModule = await createTestingModule({
@@ -26,7 +27,7 @@ describe('GoogleAuthController', () => {
         {
           provide: ConfigService,
           useValue: {
-            getOrThrow: jest.fn(),
+            getOrThrow: getOrThrowMock,
           },
         },
       ],
@@ -56,12 +57,91 @@ describe('GoogleAuthController', () => {
     );
 
     expect(cookieMock).toHaveBeenCalledTimes(1);
-    expect(cookieMock).toHaveBeenCalledWith('access_token', '1', {
-      domain: undefined,
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: false,
-    });
+    expect(cookieMock).toHaveBeenCalledWith(
+      'access_token',
+      '1',
+      expect.objectContaining({
+        httpOnly: true,
+        sameSite: 'lax',
+        secure: false,
+      }),
+    );
+  });
+
+  it('добавляет domain в куки запроса', () => {
+    const cookieMock = jest.fn();
+
+    getOrThrowMock.mockImplementation((key) =>
+      key === 'DOMAIN' ? 'example.com' : null,
+    );
+
+    controller.oAuthCallback(
+      {} as unknown as Request,
+      {
+        cookie: cookieMock,
+        json: () => {},
+        redirect: () => {},
+      } as unknown as Response,
+    );
+
+    expect(cookieMock).toHaveBeenCalledTimes(1);
+    expect(cookieMock).toHaveBeenCalledWith(
+      'access_token',
+      '1',
+      expect.objectContaining({
+        domain: 'example.com',
+      }),
+    );
+  });
+
+  it('добавляет maxAge в куки запроса для постоянной куки', () => {
+    const cookieMock = jest.fn();
+
+    getOrThrowMock.mockImplementation((key) =>
+      key === 'EXPIRES_INT' ? '48h' : null,
+    );
+
+    controller.oAuthCallback(
+      {} as unknown as Request,
+      {
+        cookie: cookieMock,
+        json: () => {},
+        redirect: () => {},
+      } as unknown as Response,
+    );
+
+    expect(cookieMock).toHaveBeenCalledTimes(1);
+    expect(cookieMock).toHaveBeenCalledWith(
+      'access_token',
+      '1',
+      expect.objectContaining({
+        maxAge: 172_800_000,
+      }),
+    );
+  });
+
+  it('добавляет дефолтный maxAge в куки запроса', () => {
+    const cookieMock = jest.fn();
+
+    getOrThrowMock.mockImplementation(() => null);
+
+    controller.oAuthCallback(
+      {} as unknown as Request,
+      {
+        cookie: cookieMock,
+        json: () => {},
+        redirect: () => {},
+      } as unknown as Response,
+    );
+
+    expect(cookieMock).toHaveBeenCalledTimes(1);
+    expect(cookieMock).toHaveBeenCalledWith(
+      'access_token',
+      '1',
+      expect.objectContaining({
+        maxAge: 172_800_000,
+      }),
+    );
   });
 
   it('редирект по url из appId, если найден', () => {
