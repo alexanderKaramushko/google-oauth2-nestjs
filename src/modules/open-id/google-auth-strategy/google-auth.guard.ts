@@ -1,15 +1,12 @@
-import {
-  BadRequestException,
-  ExecutionContext,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthGuard, IAuthModuleOptions } from '@nestjs/passport';
 import { GOOGLE_AUTH_STRATEGY_NAME } from './google-auth-strategy';
 import { JwtService } from '@nestjs/jwt';
 import { Request as ExpressRequest } from 'express';
 import { ConfigService } from '@nestjs/config';
 import type { EnvironmentVariables } from 'src/infra/config/config.module';
+import { GoogleAuthInvalidStateException } from './exceptions/google-auth-invalid-state.exception';
+import { GoogleAuthUserNotFoundException } from './exceptions/google-auth-user-not-found.exception';
 
 @Injectable()
 export class GoogleAuthGuard extends AuthGuard(GOOGLE_AUTH_STRATEGY_NAME) {
@@ -25,29 +22,25 @@ export class GoogleAuthGuard extends AuthGuard(GOOGLE_AUTH_STRATEGY_NAME) {
   ): IAuthModuleOptions | undefined {
     const request = context.switchToHttp().getRequest<ExpressRequest>();
 
-    if (request.url.includes('/id/callback')) {
-      return undefined;
+    if (request.url.includes('/login')) {
+      const appId = request.query.appId as string | undefined;
+
+      const stateToken = this.jwtService.sign(
+        { appId },
+        {
+          expiresIn: '5m',
+          secret: this.configService.getOrThrow('OAUTH_STATE_SECRET', {
+            infer: true,
+          }),
+        },
+      );
+
+      return {
+        state: stateToken,
+      };
     }
 
-    const appId = request.query.appId;
-
-    if (!appId) {
-      throw new BadRequestException('Не найден идентификатор клиента');
-    }
-
-    const stateToken = this.jwtService.sign(
-      { appId },
-      {
-        expiresIn: '5m',
-        secret: this.configService.getOrThrow('OAUTH_STATE_SECRET', {
-          infer: true,
-        }),
-      },
-    );
-
-    return {
-      state: stateToken,
-    };
+    return super.getAuthenticateOptions(context);
   }
 
   override handleRequest<TUser = any>(
@@ -61,7 +54,7 @@ export class GoogleAuthGuard extends AuthGuard(GOOGLE_AUTH_STRATEGY_NAME) {
 
     try {
       if (!stateToken) {
-        throw new Error('Невалидный state');
+        throw new GoogleAuthInvalidStateException();
       }
 
       this.jwtService.verify(stateToken, {
@@ -70,11 +63,11 @@ export class GoogleAuthGuard extends AuthGuard(GOOGLE_AUTH_STRATEGY_NAME) {
         }),
       });
     } catch {
-      throw new BadRequestException('Ошибка авторизации через Google');
+      throw new GoogleAuthInvalidStateException();
     }
 
     if (error || !user) {
-      throw error || new UnauthorizedException('Не найден польльзователь');
+      throw error || new GoogleAuthUserNotFoundException();
     }
 
     request.oauthState = this.jwtService.decode(stateToken);
