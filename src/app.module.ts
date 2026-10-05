@@ -7,6 +7,7 @@ import { AuthModule as MicroservicesAuthModule } from './microservices/auth/auth
 import { TokenModule } from './modules/token/token.module';
 import { AppConfigModule } from './infra/config/config.module';
 import type { EnvironmentVariables } from './infra/config/config.module';
+import { AppController } from './app/app.controller';
 
 @Module({
   imports: [
@@ -24,5 +25,6 @@ import type { EnvironmentVariables } from './infra/config/config.module';
       }),
     }),
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
